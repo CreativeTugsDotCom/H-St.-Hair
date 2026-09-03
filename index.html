@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H St. Hair | Luxury Hair Salon in Washington, DC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/1.28.0/umd/lucide.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        salon: {
+                            black: '#0c0b0a',
+                            dark: '#141210',
+                            charcoal: '#1f1c18',
+                            gold: '#c5a059',
+                            'gold-light': '#dfc387',
+                            cream: '#f9f6f0',
+                            'cream-dark': '#efe9dc',
+                            beige: '#d9cfc1',
+                            muted: '#8c857b'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0c0b0a;
+            color: #f9f6f0;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        .glass-nav {
+            background: rgba(12, 11, 10, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .hero-bg {
+            background-image: linear-gradient(to bottom, rgba(12,11,10,0.4), rgba(12,11,10,0.85)), url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover;
+            background-position: center;
+        }
+        .cta-bg {
+            background-image: linear-gradient(to right, rgba(12,11,10,0.9), rgba(20,18,16,0.8)), url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=1920');
+            background-size: cover;
+            background-position: center;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0c0b0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5a059;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-salon-black text-salon-cream antialiased selection:bg-salon-gold selection:text-salon-black">
+
+    <!-- Notification Modal Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 bg-salon-cream text-salon-black px-6 py-4 rounded-xl shadow-2xl border border-salon-gold flex items-center space-x-3">
+        <i data-lucide="check-circle" class="w-6 h-6 text-salon-gold"></i>
+        <div>
+            <h4 class="font-bold font-serif text-lg">Request Received</h4>
+            <p id="toast-msg" class="text-xs text-salon-charcoal">We will contact you shortly to confirm.</p>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-salon-dark border border-salon-gold/30 w-full max-w-lg rounded-2xl p-8 relative transform scale-95 transition-transform duration-300 shadow-2xl">
+            <button onclick="toggleBookingModal(false)" class="absolute top-6 right-6 text-salon-beige hover:text-salon-gold transition-colors">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="text-center mb-6">
+                <span class="text-xs uppercase tracking-widest text-salon-gold font-semibold">H St. Hair Studio</span>
+                <h3 class="text-3xl font-serif mt-1">Book Your Appointment</h3>
+                <p class="text-salon-beige text-sm mt-1">Fill out the details below and our team will confirm your session.</p>
+            </div>
+            <form onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-salon-beige mb-1">Full Name</label>
+                    <input required type="text" placeholder="Victoria Sterling" class="w-full bg-salon-black border border-salon-beige/20 rounded-lg px-4 py-3 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-salon-beige mb-1">Phone Number</label>
+                        <input required type="tel" placeholder="(202) 555-0199" class="w-full bg-salon-black border border-salon-beige/20 rounded-lg px-4 py-3 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-salon-beige mb-1">Select Service</label>
+                        <select class="w-full bg-salon-black border border-salon-beige/20 rounded-lg px-4 py-3 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors">
+                            <option>Haircuts & Styling</option>
+                            <option>Signature Blowout</option>
+                            <option>Hair Wash & Treatment</option>
+                            <option>Scalp Massage Therapy</option>
+                            <option>Personalized Color & Styling</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-salon-beige mb-1">Preferred Date</label>
+                        <input required type="date" class="w-full bg-salon-black border border-salon-beige/20 rounded-lg px-4 py-3 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-salon-beige mb-1">Preferred Time</label>
+                        <select class="w-full bg-salon-black border border-salon-beige/20 rounded-lg px-4 py-3 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors">
+                            <option>Morning (10 AM - 12 PM)</option>
+                            <option>Afternoon (12 PM - 4 PM)</option>
+                            <option>Evening (4 PM - 7 PM)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-4 bg-salon-gold hover:bg-salon-gold-light text-salon-black font-semibold rounded-lg tracking-wider uppercase text-sm transition-all shadow-lg hover:shadow-salon-gold/20 mt-2">
+                    Confirm Appointment Request
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sticky Header -->
+    <header id="header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 glass-nav border-b border-salon-gold/10">
+        <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
+            <a href="#" class="flex flex-col">
+                <span class="font-serif text-2xl md:text-3xl tracking-wider text-salon-cream font-bold">H ST. HAIR</span>
+                <span class="text-[10px] tracking-[0.3em] uppercase text-salon-gold">Washington, DC</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden lg:flex items-center space-x-8 text-sm font-medium tracking-wide">
+                <a href="#home" class="text-salon-gold hover:text-salon-gold-light transition-colors">Home</a>
+                <a href="#about" class="text-salon-beige hover:text-salon-gold transition-colors">About</a>
+                <a href="#services" class="text-salon-beige hover:text-salon-gold transition-colors">Services</a>
+                <a href="#why-us" class="text-salon-beige hover:text-salon-gold transition-colors">Why Us</a>
+                <a href="#reviews" class="text-salon-beige hover:text-salon-gold transition-colors">Reviews</a>
+                <a href="#contact" class="text-salon-beige hover:text-salon-gold transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center space-x-4">
+                <a href="tel:2027355131" class="text-xs tracking-wider text-salon-beige flex items-center space-x-2 mr-2">
+                    <i data-lucide="phone" class="w-4 h-4 text-salon-gold"></i>
+                    <span>(202) 735-5131</span>
+                </a>
+                <button onclick="toggleBookingModal(true)" class="px-6 py-3 border border-salon-gold text-salon-gold hover:bg-salon-gold hover:text-salon-black transition-all rounded-full text-xs font-semibold tracking-widest uppercase">
+                    Book Appointment
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle -->
+            <button onclick="toggleMobileMenu()" class="lg:hidden text-salon-cream hover:text-salon-gold transition-colors">
+                <i data-lucide="menu" class="w-7 h-7"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Nav Menu -->
+        <div id="mobile-menu" class="lg:hidden absolute top-full left-0 right-0 bg-salon-dark border-b border-salon-gold/20 py-6 px-6 hidden shadow-2xl">
+            <nav class="flex flex-col space-y-4 text-center font-medium">
+                <a href="#home" onclick="toggleMobileMenu()" class="text-salon-gold py-2">Home</a>
+                <a href="#about" onclick="toggleMobileMenu()" class="text-salon-beige py-2">About</a>
+                <a href="#services" onclick="toggleMobileMenu()" class="text-salon-beige py-2">Services</a>
+                <a href="#why-us" onclick="toggleMobileMenu()" class="text-salon-beige py-2">Why Us</a>
+                <a href="#reviews" onclick="toggleMobileMenu()" class="text-salon-beige py-2">Reviews</a>
+                <a href="#contact" onclick="toggleMobileMenu()" class="text-salon-beige py-2">Contact</a>
+                <div class="pt-4 border-t border-salon-beige/10 flex flex-col space-y-3">
+                    <a href="tel:2027355131" class="text-salon-gold text-sm">(202) 735-5131</a>
+                    <button onclick="toggleMobileMenu(); toggleBookingModal(true);" class="w-full py-3 bg-salon-gold text-salon-black rounded-full font-semibold text-xs tracking-widest uppercase">
+                        Book Appointment
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center pt-24 pb-16 relative">
+        <div class="max-w-5xl mx-auto px-6 text-center z-10">
+            <span class="inline-block py-1.5 px-4 rounded-full border border-salon-gold/40 text-salon-gold text-xs uppercase tracking-[0.25em] mb-6 bg-salon-black/40 backdrop-blur-md">
+                Washington, DC Premier Salon
+            </span>
+            <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-salon-cream font-normal leading-[1.1] mb-6">
+                Your Hair. Your Style. <br><span class="italic font-light text-salon-gold">Your Signature.</span>
+            </h1>
+            <p class="max-w-2xl mx-auto text-salon-beige text-base sm:text-lg font-light leading-relaxed mb-10">
+                Exceptional hair care, personalized styling, and a welcoming salon experience in the heart of H Street NE. Professional styling tailored for your unique lifestyle.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button onclick="toggleBookingModal(true)" class="w-full sm:w-auto px-8 py-4 bg-salon-gold hover:bg-salon-gold-light text-salon-black font-semibold rounded-full tracking-widest uppercase text-xs transition-all shadow-xl hover:shadow-salon-gold/20">
+                    Book Your Appointment
+                </button>
+                <a href="#services" class="w-full sm:w-auto px-8 py-4 border border-salon-beige/40 hover:border-salon-gold text-salon-cream font-medium rounded-full tracking-widest uppercase text-xs transition-all">
+                    Explore Services
+                </a>
+            </div>
+
+            <!-- Floating Info Pill -->
+            <div class="mt-20 inline-flex items-center space-x-6 bg-salon-black/70 backdrop-blur-md border border-salon-gold/20 px-8 py-4 rounded-2xl text-xs tracking-wider text-salon-beige">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-salon-gold"></i>
+                    <span>407 H St NE, Washington, DC 20002</span>
+                </div>
+                <div class="hidden sm:block w-px h-4 bg-salon-beige/20"></div>
+                <div class="hidden sm:flex items-center space-x-2">
+                    <i data-lucide="award" class="w-4 h-4 text-salon-gold"></i>
+                    <span>Top-Rated H St NE Salon</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="py-28 bg-salon-dark relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                <!-- Image Collage -->
+                <div class="lg:col-span-6 relative">
+                    <div class="relative z-10 rounded-2xl overflow-hidden border border-salon-gold/20 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&q=80&w=1000" alt="H St. Hair Interior" class="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="absolute -bottom-8 -right-8 w-2/3 hidden sm:block z-20 rounded-2xl overflow-hidden border-4 border-salon-dark shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1582095133179-bfd08e2fc6b3?auto=format&fit=crop&q=80&w=600" alt="Styling Session" class="w-full h-[280px] object-cover">
+                    </div>
+                    <div class="absolute -top-6 -left-6 w-32 h-32 border border-salon-gold/30 rounded-full pointer-events-none"></div>
+                </div>
+
+                <!-- Content -->
+                <div class="lg:col-span-6">
+                    <span class="text-xs uppercase tracking-[0.3em] text-salon-gold font-semibold mb-3 block">About H St. Hair</span>
+                    <h2 class="font-serif text-3xl sm:text-5xl text-salon-cream mb-6 leading-tight">
+                        Beauty That Feels <span class="italic text-salon-gold font-normal">Personal</span>
+                    </h2>
+                    <p class="text-salon-beige font-light leading-relaxed mb-6">
+                        Nestled in the vibrant neighborhood of H Street NE, Washington, DC, H St. Hair is a sanctuary dedicated to the art of premium hair care. We believe that exceptional hair styling goes far beyond the chair—it's about listening to your needs, understanding your hair's unique texture, and crafting a look that empowers your daily confidence.
+                    </p>
+                    <p class="text-salon-beige font-light leading-relaxed mb-8">
+                        Whether you are looking for a precision cut, transformative color, or a rejuvenating scalp treatment, our experienced stylists provide meticulous craftsmanship in an inviting, elegant atmosphere.
+                    </p>
+
+                    <!-- Feature Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex items-center space-x-3 bg-salon-charcoal/60 border border-salon-beige/10 p-4 rounded-xl">
+                            <i data-lucide="check" class="w-5 h-5 text-salon-gold flex-shrink-0"></i>
+                            <span class="text-sm font-medium text-salon-cream">Experienced Stylists</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-salon-charcoal/60 border border-salon-beige/10 p-4 rounded-xl">
+                            <i data-lucide="check" class="w-5 h-5 text-salon-gold flex-shrink-0"></i>
+                            <span class="text-sm font-medium text-salon-cream">Personalized Service</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-salon-charcoal/60 border border-salon-beige/10 p-4 rounded-xl">
+                            <i data-lucide="check" class="w-5 h-5 text-salon-gold flex-shrink-0"></i>
+                            <span class="text-sm font-medium text-salon-cream">Welcoming Atmosphere</span>
+                        </div>
+                        <div class="flex items-center space-x-3 bg-salon-charcoal/60 border border-salon-beige/10 p-4 rounded-xl">
+                            <i data-lucide="check" class="w-5 h-5 text-salon-gold flex-shrink-0"></i>
+                            <span class="text-sm font-medium text-salon-cream">Quality Hair Care</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION -->
+    <section id="services" class="py-28 bg-salon-black relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <span class="text-xs uppercase tracking-[0.3em] text-salon-gold font-semibold mb-3 block">Expert Offerings</span>
+                <h2 class="font-serif text-3xl sm:text-5xl text-salon-cream mb-4">Curated Salon Services</h2>
+                <p class="text-salon-beige font-light text-sm sm:text-base">Designed to elevate your personal style with flawless precision and luxurious touch.</p>
+            </div>
+
+            <!-- Service Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="group bg-salon-dark border border-salon-beige/10 hover:border-salon-gold/50 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold mb-6 group-hover:bg-salon-gold group-hover:text-salon-black transition-colors">
+                            <i data-lucide="scissors" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl text-salon-cream mb-3">Haircuts & Styling</h3>
+                        <p class="text-salon-beige text-sm font-light leading-relaxed mb-6">
+                            Precision cuts tailored to your bone structure, face shape, and daily maintenance routine, finished with a professional style.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-salon-beige/10 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-salon-gold font-semibold">Custom Session</span>
+                        <button onclick="toggleBookingModal(true)" class="text-xs uppercase tracking-widest text-salon-cream group-hover:text-salon-gold flex items-center space-x-1 transition-colors">
+                            <span>Book</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="group bg-salon-dark border border-salon-beige/10 hover:border-salon-gold/50 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold mb-6 group-hover:bg-salon-gold group-hover:text-salon-black transition-colors">
+                            <i data-lucide="droplet" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl text-salon-cream mb-3">Hair Wash</h3>
+                        <p class="text-salon-beige text-sm font-light leading-relaxed mb-6">
+                            A cleansing ritual utilizing premium botanicals and hydrating shampoos designed to purify and invigorate your scalp and locks.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-salon-beige/10 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-salon-gold font-semibold">Refreshing</span>
+                        <button onclick="toggleBookingModal(true)" class="text-xs uppercase tracking-widest text-salon-cream group-hover:text-salon-gold flex items-center space-x-1 transition-colors">
+                            <span>Book</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="group bg-salon-dark border border-salon-beige/10 hover:border-salon-gold/50 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold mb-6 group-hover:bg-salon-gold group-hover:text-salon-black transition-colors">
+                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl text-salon-cream mb-3">Scalp Massage</h3>
+                        <p class="text-salon-beige text-sm font-light leading-relaxed mb-6">
+                            Relieve tension and stimulate healthy follicle growth with our deeply therapeutic and relaxing professional scalp massage.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-salon-beige/10 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-salon-gold font-semibold">Relaxation</span>
+                        <button onclick="toggleBookingModal(true)" class="text-xs uppercase tracking-widest text-salon-cream group-hover:text-salon-gold flex items-center space-x-1 transition-colors">
+                            <span>Book</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="group bg-salon-dark border border-salon-beige/10 hover:border-salon-gold/50 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold mb-6 group-hover:bg-salon-gold group-hover:text-salon-black transition-colors">
+                            <i data-lucide="heart" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl text-salon-cream mb-3">Hair Treatments</h3>
+                        <p class="text-salon-beige text-sm font-light leading-relaxed mb-6">
+                            Deep conditioning, moisture repair, and keratin infusions designed to restore silky shine, strength, and vibrant elasticity.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-salon-beige/10 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-salon-gold font-semibold">Restorative</span>
+                        <button onclick="toggleBookingModal(true)" class="text-xs uppercase tracking-widest text-salon-cream group-hover:text-salon-gold flex items-center space-x-1 transition-colors">
+                            <span>Book</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="group bg-salon-dark border border-salon-beige/10 hover:border-salon-gold/50 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold mb-6 group-hover:bg-salon-gold group-hover:text-salon-black transition-colors">
+                            <i data-lucide="wand-2" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl text-salon-cream mb-3">Personalized Styling</h3>
+                        <p class="text-salon-beige text-sm font-light leading-relaxed mb-6">
+                            Specialized styling for events, galas, or everyday polish. Expert curling, sleek straightening, and elegant updos.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-salon-beige/10 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-salon-gold font-semibold">Special Event</span>
+                        <button onclick="toggleBookingModal(true)" class="text-xs uppercase tracking-widest text-salon-cream group-hover:text-salon-gold flex items-center space-x-1 transition-colors">
+                            <span>Book</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="group bg-salon-dark border border-salon-beige/10 hover:border-salon-gold/50 rounded-2xl p-8 transition-all duration-300 hover:-translate-y-2 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold mb-6 group-hover:bg-salon-gold group-hover:text-salon-black transition-colors">
+                            <i data-lucide="wind" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-serif text-2xl text-salon-cream mb-3">Blowouts</h3>
+                        <p class="text-salon-beige text-sm font-light leading-relaxed mb-6">
+                            Voluminous, long-lasting blowouts that give your hair incredible body, smooth texture, and an effortless glossy finish.
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-salon-beige/10 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-salon-gold font-semibold">Signature Service</span>
+                        <button onclick="toggleBookingModal(true)" class="text-xs uppercase tracking-widest text-salon-cream group-hover:text-salon-gold flex items-center space-x-1 transition-colors">
+                            <span>Book</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE H ST. HAIR -->
+    <section id="why-us" class="py-28 bg-salon-dark border-t border-b border-salon-gold/10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <span class="text-xs uppercase tracking-[0.3em] text-salon-gold font-semibold mb-3 block">The Experience</span>
+                <h2 class="font-serif text-3xl sm:text-5xl text-salon-cream mb-4">More Than a Haircut</h2>
+                <p class="text-salon-beige font-light text-sm sm:text-base">Discover what makes our H Street NE studio a favorite destination for hair care in Washington, DC.</p>
+            </div>
+
+            <!-- 4 Column Layout -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-salon-black/60 border border-salon-beige/10 p-8 rounded-2xl relative overflow-hidden group hover:border-salon-gold/40 transition-all">
+                    <span class="font-serif text-4xl text-salon-gold/30 font-bold mb-4 block group-hover:text-salon-gold transition-colors">01</span>
+                    <h3 class="font-serif text-xl text-salon-cream mb-3">Personalized Attention</h3>
+                    <p class="text-salon-beige text-sm font-light leading-relaxed">
+                        Styles tailored meticulously to your preferences, daily routine, and personal lifestyle.
+                    </p>
+                </div>
+
+                <div class="bg-salon-black/60 border border-salon-beige/10 p-8 rounded-2xl relative overflow-hidden group hover:border-salon-gold/40 transition-all">
+                    <span class="font-serif text-4xl text-salon-gold/30 font-bold mb-4 block group-hover:text-salon-gold transition-colors">02</span>
+                    <h3 class="font-serif text-xl text-salon-cream mb-3">Skilled Stylists</h3>
+                    <p class="text-salon-beige text-sm font-light leading-relaxed">
+                        Professional service delivered with artistic vision and obsessive attention to detail.
+                    </p>
+                </div>
+
+                <div class="bg-salon-black/60 border border-salon-beige/10 p-8 rounded-2xl relative overflow-hidden group hover:border-salon-gold/40 transition-all">
+                    <span class="font-serif text-4xl text-salon-gold/30 font-bold mb-4 block group-hover:text-salon-gold transition-colors">03</span>
+                    <h3 class="font-serif text-xl text-salon-cream mb-3">Relaxing Experience</h3>
+                    <p class="text-salon-beige text-sm font-light leading-relaxed">
+                        A comfortable, welcoming environment where you can truly unwind and escape the city rush.
+                    </p>
+                </div>
+
+                <div class="bg-salon-black/60 border border-salon-beige/10 p-8 rounded-2xl relative overflow-hidden group hover:border-salon-gold/40 transition-all">
+                    <span class="font-serif text-4xl text-salon-gold/30 font-bold mb-4 block group-hover:text-salon-gold transition-colors">04</span>
+                    <h3 class="font-serif text-xl text-salon-cream mb-3">Convenient Booking</h3>
+                    <p class="text-salon-beige text-sm font-light leading-relaxed">
+                        Easy appointment scheduling designed with flexible times to fit seamlessly into your busy week.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION -->
+    <section id="reviews" class="py-28 bg-salon-black relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <span class="text-xs uppercase tracking-[0.3em] text-salon-gold font-semibold mb-3 block">Community Love</span>
+                <h2 class="font-serif text-3xl sm:text-5xl text-salon-cream mb-4">Loved by the H Street Community</h2>
+                <p class="text-salon-beige font-light text-sm sm:text-base">Read authentic words from clients who trust us with their hair every single month.</p>
+            </div>
+
+            <!-- Testimonial Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-salon-dark border border-salon-beige/10 p-8 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-1 text-salon-gold mb-6">
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                        </div>
+                        <p class="text-salon-beige font-light italic leading-relaxed mb-6 text-sm">
+                            "H St. Hair is an absolute gem in DC! The atmosphere is so peaceful, and my stylist took the time to understand exactly what I wanted. My blowout lasted for days and looked incredible."
+                        </p>
+                    </div>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-salon-beige/10">
+                        <div class="w-10 h-10 rounded-full bg-salon-gold/20 flex items-center justify-center font-serif text-salon-gold font-bold">
+                            SL
+                        </div>
+                        <div>
+                            <h4 class="font-serif text-salon-cream text-base">Sarah Lawrence</h4>
+                            <span class="text-xs text-salon-muted">H Street Resident</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="bg-salon-dark border border-salon-beige/10 p-8 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-1 text-salon-gold mb-6">
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                        </div>
+                        <p class="text-salon-beige font-light italic leading-relaxed mb-6 text-sm">
+                            "Finding a stylist who knows how to cut and style textured hair properly in DC can be tough, but the team here is exceptionally skilled. Super clean, professional, and welcoming."
+                        </p>
+                    </div>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-salon-beige/10">
+                        <div class="w-10 h-10 rounded-full bg-salon-gold/20 flex items-center justify-center font-serif text-salon-gold font-bold">
+                            JM
+                        </div>
+                        <div>
+                            <h4 class="font-serif text-salon-cream text-base">Jordan Marcus</h4>
+                            <span class="text-xs text-salon-muted">DC Local</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="bg-salon-dark border border-salon-beige/10 p-8 rounded-2xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-1 text-salon-gold mb-6">
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-salon-gold"></i>
+                        </div>
+                        <p class="text-salon-beige font-light italic leading-relaxed mb-6 text-sm">
+                            "The scalp massage and hair treatment session was pure heaven. I left feeling refreshed and confident. I won't go anywhere else in DC for my hair care."
+                        </p>
+                    </div>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-salon-beige/10">
+                        <div class="w-10 h-10 rounded-full bg-salon-gold/20 flex items-center justify-center font-serif text-salon-gold font-bold">
+                            EP
+                        </div>
+                        <div>
+                            <h4 class="font-serif text-salon-cream text-base">Elena Patel</h4>
+                            <span class="text-xs text-salon-muted">Atlas District</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BANNER SECTION -->
+    <section class="cta-bg py-24 relative">
+        <div class="max-w-4xl mx-auto px-6 text-center z-10 relative">
+            <span class="text-xs uppercase tracking-[0.3em] text-salon-gold font-semibold mb-3 block">Your Next Look Awaits</span>
+            <h2 class="font-serif text-4xl sm:text-6xl text-salon-cream mb-6">Ready for Your Next Look?</h2>
+            <p class="text-salon-beige font-light text-base sm:text-lg max-w-xl mx-auto mb-10">
+                Book your appointment at H St. Hair and leave feeling confident, refreshed, and ready for anything.
+            </p>
+            <button onclick="toggleBookingModal(true)" class="px-10 py-5 bg-salon-gold hover:bg-salon-gold-light text-salon-black font-semibold rounded-full tracking-widest uppercase text-xs transition-all shadow-2xl hover:scale-105">
+                Book Your Appointment
+            </button>
+        </div>
+    </section>
+
+    <!-- CONTACT & LOCATION SECTION -->
+    <section id="contact" class="py-28 bg-salon-dark relative">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                <!-- Info & Hours -->
+                <div class="lg:col-span-5 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs uppercase tracking-[0.3em] text-salon-gold font-semibold mb-3 block">Get In Touch</span>
+                        <h2 class="font-serif text-3xl sm:text-5xl text-salon-cream mb-6">Visit H St. Hair</h2>
+                        <p class="text-salon-beige font-light text-sm mb-8 leading-relaxed">
+                            Conveniently located on H Street NE in Washington, DC. Drop by or contact us to schedule your next salon appointment.
+                        </p>
+
+                        <div class="space-y-6">
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold flex-shrink-0 mt-1">
+                                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-salon-cream font-medium text-sm">Location</h4>
+                                    <p class="text-salon-beige text-sm font-light">407 H St NE<br>Washington, DC 20002</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold flex-shrink-0 mt-1">
+                                    <i data-lucide="phone" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-salon-cream font-medium text-sm">Phone</h4>
+                                    <a href="tel:2027355131" class="text-salon-beige text-sm font-light hover:text-salon-gold transition-colors">(202) 735-5131</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-start space-x-4">
+                                <div class="w-10 h-10 rounded-xl bg-salon-charcoal border border-salon-gold/30 flex items-center justify-center text-salon-gold flex-shrink-0 mt-1">
+                                    <i data-lucide="clock" class="w-5 h-5"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-salon-cream font-medium text-sm">Opening Hours</h4>
+                                    <p class="text-salon-beige text-sm font-light">Tuesday – Saturday: 10:00 AM – 7:00 PM<br>Sunday: 11:00 AM – 5:00 PM<br>Monday: Closed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map / Location Area Mock -->
+                    <div class="mt-10 rounded-2xl overflow-hidden border border-salon-gold/20 bg-salon-black h-48 relative flex items-center justify-center">
+                        <div class="absolute inset-0 opacity-40 bg-[radial-gradient(#c5a059_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <div class="z-10 text-center px-4">
+                            <i data-lucide="map" class="w-8 h-8 text-salon-gold mx-auto mb-2"></i>
+                            <h4 class="font-serif text-salon-cream font-medium">407 H St NE, Washington, DC</h4>
+                            <p class="text-xs text-salon-beige mt-1">Heart of H Street NE Corridor</p>
+                            <a href="https://maps.google.com/?q=407+H+St+NE+Washington+DC+20002" target="_blank" class="inline-block mt-3 text-xs uppercase tracking-widest text-salon-gold hover:underline font-semibold">Get Directions →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clean Contact Form -->
+                <div class="lg:col-span-7 bg-salon-black border border-salon-beige/10 p-8 sm:p-12 rounded-3xl shadow-2xl">
+                    <h3 class="font-serif text-2xl sm:text-3xl text-salon-cream mb-2">Send Us a Message</h3>
+                    <p class="text-salon-beige text-sm font-light mb-8">Have a question about our services or need a custom styling consultation? Send us a note.</p>
+                    
+                    <form onsubmit="handleContactSubmit(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-salon-beige mb-2">Your Name</label>
+                                <input required type="text" placeholder="Jane Doe" class="w-full bg-salon-dark border border-salon-beige/20 rounded-xl px-4 py-3.5 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-salon-beige mb-2">Email Address</label>
+                                <input required type="email" placeholder="jane@example.com" class="w-full bg-salon-dark border border-salon-beige/20 rounded-xl px-4 py-3.5 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-salon-beige mb-2">Phone Number</label>
+                            <input required type="tel" placeholder="(202) 555-0144" class="w-full bg-salon-dark border border-salon-beige/20 rounded-xl px-4 py-3.5 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-salon-beige mb-2">Your Message</label>
+                            <textarea required rows="4" placeholder="Tell us how we can help with your hair care..." class="w-full bg-salon-dark border border-salon-beige/20 rounded-xl px-4 py-3.5 text-salon-cream focus:outline-none focus:border-salon-gold transition-colors text-sm resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-salon-gold hover:bg-salon-gold-light text-salon-black font-semibold rounded-xl tracking-widest uppercase text-xs transition-all shadow-lg">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-salon-black border-t border-salon-gold/20 pt-20 pb-12 text-salon-beige text-sm">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Col 1 -->
+                <div>
+                    <span class="font-serif text-2xl tracking-wider text-salon-cream font-bold block mb-3">H ST. HAIR</span>
+                    <p class="text-xs uppercase tracking-[0.25em] text-salon-gold mb-4">Washington, DC</p>
+                    <p class="text-salon-beige/80 text-xs font-light leading-relaxed mb-6">
+                        Personalized hair care in the heart of Washington, DC. Dedicated to luxury style and welcoming hospitality.
+                    </p>
+                    <div class="flex items-center space-x-3">
+                        <a href="#" class="w-9 h-9 rounded-full bg-salon-dark border border-salon-beige/20 flex items-center justify-center text-salon-gold hover:bg-salon-gold hover:text-salon-black transition-colors">
+                            <i data-lucide="instagram" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-salon-dark border border-salon-beige/20 flex items-center justify-center text-salon-gold hover:bg-salon-gold hover:text-salon-black transition-colors">
+                            <i data-lucide="facebook" class="w-4 h-4"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-full bg-salon-dark border border-salon-beige/20 flex items-center justify-center text-salon-gold hover:bg-salon-gold hover:text-salon-black transition-colors">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Col 2 -->
+                <div>
+                    <h4 class="font-serif text-salon-cream text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><a href="#home" class="hover:text-salon-gold transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-salon-gold transition-colors">About</a></li>
+                        <li><a href="#services" class="hover:text-salon-gold transition-colors">Services</a></li>
+                        <li><a href="#why-us" class="hover:text-salon-gold transition-colors">Why Choose Us</a></li>
+                        <li><a href="#reviews" class="hover:text-salon-gold transition-colors">Reviews</a></li>
+                        <li><a href="#contact" class="hover:text-salon-gold transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3 -->
+                <div>
+                    <h4 class="font-serif text-salon-cream text-lg mb-4">Contact Info</h4>
+                    <ul class="space-y-3 text-xs">
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="phone" class="w-4 h-4 text-salon-gold"></i>
+                            <a href="tel:2027355131" class="hover:text-salon-gold transition-colors">(202) 735-5131</a>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-salon-gold flex-shrink-0 mt-0.5"></i>
+                            <span>407 H St NE, Washington, DC 20002</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="clock" class="w-4 h-4 text-salon-gold"></i>
+                            <span>Tue - Sat: 10am - 7pm</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4 -->
+                <div>
+                    <h4 class="font-serif text-salon-cream text-lg mb-4">Book Your Visit</h4>
+                    <p class="text-xs text-salon-beige/80 font-light mb-4">Ready for an exceptional salon experience? Secure your chair today.</p>
+                    <button onclick="toggleBookingModal(true)" class="w-full py-3 bg-salon-gold hover:bg-salon-gold-light text-salon-black font-semibold rounded-lg tracking-widest uppercase text-xs transition-all">
+                        Book Appointment
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-salon-beige/10 flex flex-col sm:flex-row items-center justify-between text-xs text-salon-muted">
+                <p>&copy; 2026 H St. Hair. All rights reserved. Washington, DC.</p>
+                <div class="flex space-x-6 mt-4 sm:mt-0">
+                    <a href="#" class="hover:text-salon-gold transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-salon-gold transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Booking modal toggle
+        function toggleBookingModal(open) {
+            const modal = document.getElementById('booking-modal');
+            if (open) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modal.querySelector('div').classList.remove('scale-95');
+                modal.querySelector('div').classList.add('scale-100');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+                modal.querySelector('div').classList.remove('scale-100');
+                modal.querySelector('div').classList.add('scale-95');
+            }
+        }
+
+        // Toast notifications
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            msgEl.textContent = message;
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 4000);
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            toggleBookingModal(false);
+            showToast("Your appointment request has been sent successfully!");
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            e.target.reset();
+            showToast("Thank you! Your message has been sent to our team.");
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 40) {
+                header.classList.add('shadow-xl', 'bg-salon-black/95');
+            } else {
+                header.classList.remove('shadow-xl');
+            }
+        });
+    </script>
+</body>
+</html>
